@@ -1384,6 +1384,12 @@ void emcmotCommandHandler(void *arg, long period)
 	    rtapi_print_msg(RTAPI_MSG_DBG, "JOINT_HOME");
 	    rtapi_print_msg(RTAPI_MSG_DBG, " %d", joint_num);
 
+	    if (*(emcmot_hal_data->homing_inhibit)) {
+	        reportError(_("Homing denied by motion.homing-inhibit joint=%d\n"),
+	                   joint_num);
+                return;
+	    }
+
 	    if (emcmotStatus->motion_state != EMCMOT_MOTION_FREE) {
 		/* can't home unless in free mode */
 		reportError(_("must be in joint mode to home"));
